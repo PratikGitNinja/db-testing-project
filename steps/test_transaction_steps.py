@@ -24,19 +24,17 @@ def test_tables_available(db_cursor):
     assert 'transactions' in TABLES
     assert 'customers' in TABLES
 
-invalid_transaction = []
 @when('we fetch transactions with invalid customer_id')
 def test_transaction_with_invalid_transaction(db_cursor):
     
-    global invalid_transaction
     db_cursor.execute("""
         SELECT t.txn_id FROM transactions t left join customers c on t.customer_id = c.customer_id
         Where c.customer_id is null
         """)
-    invalid_transaction = db_cursor.fetchall()
+    pytest.invalid_transaction = db_cursor.fetchall()
 
 @then('there should be no such transactions')
 def test_validate_no_invalid_transaction():
-        
-    assert len(invalid_transaction) == 0, f"There are {len(invalid_transaction)} invalid transactions."
+    
+    assert len(pytest.invalid_transaction) == 0, f"There are {len(pytest.invalid_transaction)} invalid transactions."
 
