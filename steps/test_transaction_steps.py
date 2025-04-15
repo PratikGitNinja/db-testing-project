@@ -24,11 +24,11 @@ def test_tables_available(db_cursor):
     assert 'transactions' in TABLES
     assert 'customers' in TABLES
 
-global invalid_transaction
-
+invalid_transaction = []
 @when('we fetch transactions with invalid customer_id')
 def test_transaction_with_invalid_transaction(db_cursor):
     
+    global invalid_transaction
     db_cursor.execute("""
         SELECT t.txn_id FROM transactions t left join customers c on t.customer_id = c.customer_id
         Where c.customer_id is null
